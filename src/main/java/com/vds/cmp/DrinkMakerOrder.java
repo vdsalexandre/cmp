@@ -7,12 +7,13 @@ public class DrinkMakerOrder {
     private Integer sugarQuantity;
     private Integer stickOrNot;
     private String message;
+    private double orderPrice;
 
     public DrinkMakerOrder(String commandOrder) throws WrongOrderException {
         if (commandOrder.contains(":")) {
             String[] instructions = commandOrder.split(":");
 
-            if (instructions.length > 4 || instructions.length < 1) throw new WrongOrderException("Wrong order");
+            if (instructions.length > 3 || instructions.length < 1) throw new WrongOrderException("Wrong order");
 
             this.drink = instructions[0].charAt(0);
 
@@ -28,6 +29,8 @@ public class DrinkMakerOrder {
                 } catch (Exception ex) {
                     this.stickOrNot = null;
                 }
+
+                this.orderPrice = getOrderPrice();
             }
             else {
                 this.message = instructions[1];
@@ -85,7 +88,8 @@ public class DrinkMakerOrder {
             return "DrinkMakerOrder {" + "\n\t" +
                     "drink: " + getDrinkName() + ",\n\t" +
                     "sugarQuantity: " + showSugarQuantity() + ",\n\t" +
-                    "stickOrNot: " + isStick() + "\n" +
+                    "stickOrNot: " + isStick() + ",\n\t" +
+                    "orderPrice: " + orderPrice + "€\n" +
                     '}';
         }
     }
@@ -108,5 +112,15 @@ public class DrinkMakerOrder {
 
     private String isStick() {
         return this.stickOrNot != null ? "Yes" : "No";
+    }
+
+    public double getOrderPrice() {
+        if (Drinks.CHOCOLATE.getName().equals(getDrinkName())) return Drinks.CHOCOLATE.getPrice();
+
+        if (Drinks.COFFEE.getName().equals(getDrinkName())) return Drinks.COFFEE.getPrice();
+
+        if (Drinks.TEA.getName().equals(getDrinkName())) return Drinks.TEA.getPrice();
+
+        return 0.0;
     }
 }
