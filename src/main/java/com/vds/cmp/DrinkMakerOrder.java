@@ -8,12 +8,13 @@ public class DrinkMakerOrder {
     private Integer stickOrNot;
     private String message;
     private double orderPrice;
+    private boolean orderOkay;
 
     public DrinkMakerOrder(String commandOrder) throws WrongOrderException {
         if (commandOrder.contains(":")) {
             String[] instructions = commandOrder.split(":");
 
-            if (instructions.length > 3 || instructions.length < 1) throw new WrongOrderException("Wrong order");
+            if (instructions.length > 4 || instructions.length < 1) throw new WrongOrderException("Wrong order");
 
             this.drink = instructions[0].charAt(0);
 
@@ -31,6 +32,14 @@ public class DrinkMakerOrder {
                 }
 
                 this.orderPrice = getOrderPrice();
+
+                if (instructions.length == 4) {
+                    try {
+                        orderOkay = calculateOrderOkay(Double.valueOf(instructions[3]));
+                    } catch (Exception ex) {
+                        orderOkay = false;
+                    }
+                }
             }
             else {
                 this.message = instructions[1];
@@ -89,7 +98,8 @@ public class DrinkMakerOrder {
                     "drink: " + getDrinkName() + ",\n\t" +
                     "sugarQuantity: " + showSugarQuantity() + ",\n\t" +
                     "stickOrNot: " + isStick() + ",\n\t" +
-                    "orderPrice: " + orderPrice + "€\n" +
+                    "orderPrice: " + orderPrice + "€,\n\t" +
+                    "isOrderOkay: " + orderOkay + "\n" +
                     '}';
         }
     }
@@ -122,5 +132,13 @@ public class DrinkMakerOrder {
         if (Drinks.TEA.getName().equals(getDrinkName())) return Drinks.TEA.getPrice();
 
         return 0.0;
+    }
+
+    public boolean isOrderOkay() {
+        return orderOkay;
+    }
+
+    private boolean calculateOrderOkay(double money) {
+        return money >= orderPrice;
     }
 }

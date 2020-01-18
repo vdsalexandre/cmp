@@ -33,7 +33,7 @@ public class DrinkMakerOrderTest {
     @Test()
     void createOrderWithTooMuchParameters() {
         Assertions.assertThrows(WrongOrderException.class, () -> {
-           DrinkMakerOrder order = new DrinkMakerOrder("T:1:0:coucou");
+           DrinkMakerOrder order = new DrinkMakerOrder("T:1:0:coucou:hello");
         });
     }
 
@@ -65,5 +65,26 @@ public class DrinkMakerOrderTest {
 
         DrinkMakerOrder order4 = new DrinkMakerOrder("C::");
         System.out.println(order4);
+
+        DrinkMakerOrder order5 = new DrinkMakerOrder("T:2::2");
+        System.out.println(order5);
+    }
+
+    @Test()
+    void createNewOrderWithPaymentOk() throws WrongOrderException {
+        DrinkMakerOrder order = new DrinkMakerOrder("C:::1");
+        Assertions.assertEquals('C', order.getDrink());
+        Assertions.assertEquals(null, order.getSugarQuantity());
+        Assertions.assertEquals(null, order.getStickOrNot());
+        Assertions.assertEquals(true, order.isOrderOkay());
+    }
+
+    @Test()
+    void createNewOrderWithPaymentKo() throws WrongOrderException {
+        DrinkMakerOrder order = new DrinkMakerOrder("H:1:0:0.2");
+        Assertions.assertEquals('H', order.getDrink());
+        Assertions.assertEquals(1, order.getSugarQuantity());
+        Assertions.assertEquals(0, order.getStickOrNot());
+        Assertions.assertEquals(false, order.isOrderOkay());
     }
 }
