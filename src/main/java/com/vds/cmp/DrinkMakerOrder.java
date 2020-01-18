@@ -114,11 +114,11 @@ public class DrinkMakerOrder {
     private String getDrinkName() {
         String drinkName = "";
 
-        if (this.code == 'T') drinkName = "tea";
+        if (this.code == 'T') drinkName = Drinks.TEA.getName();
 
-        if (this.code == 'H') drinkName = "chocolate";
+        if (this.code == 'H') drinkName = Drinks.CHOCOLATE.getName();
 
-        if (this.code == 'C') drinkName = "coffee";
+        if (this.code == 'C') drinkName = Drinks.COFFEE.getName();
 
         return drinkName;
     }
