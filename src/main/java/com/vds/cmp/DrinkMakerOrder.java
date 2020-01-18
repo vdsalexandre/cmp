@@ -11,7 +11,7 @@ public class DrinkMakerOrder {
     private boolean orderOkay;
 
     public DrinkMakerOrder(String commandOrder) throws WrongOrderException {
-        if (commandOrder.contains(":")) {
+        if (isCommandOrderOkay(commandOrder)) {
             String[] instructions = commandOrder.split(":");
 
             if (instructions.length > 4 || instructions.length < 1) throw new WrongOrderException("Wrong order");
@@ -86,6 +86,10 @@ public class DrinkMakerOrder {
         this.message = message;
     }
 
+    public boolean isCommandOrderOkay(String commandOrder) {
+        return commandOrder.contains(":");
+    }
+
     @Override
     public String toString() {
         if (isMessage()) {
@@ -116,7 +120,7 @@ public class DrinkMakerOrder {
         return drinkName;
     }
 
-    private Boolean isMessage() {
+    private boolean isMessage() {
         return this.drink == 'M';
     }
 

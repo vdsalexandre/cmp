@@ -54,8 +54,8 @@ public class DrinkMakerOrderTest {
 
     @Test()
     void showNewOrder() throws WrongOrderException {
-        DrinkMakerOrder order = new DrinkMakerOrder("H:1:0");
-        System.out.println(order);
+        DrinkMakerOrder order1 = new DrinkMakerOrder("H:1:0");
+        System.out.println(order1);
 
         DrinkMakerOrder order2 = new DrinkMakerOrder("T:2:");
         System.out.println(order2);
