@@ -9,28 +9,31 @@ public class DrinkMakerOrder {
     private String message;
 
     public DrinkMakerOrder(String commandOrder) throws WrongOrderException {
-        try {
+        if (commandOrder.contains(":")) {
             String[] instructions = commandOrder.split(":");
+
+            if (instructions.length > 4 || instructions.length < 1) throw new WrongOrderException("Wrong order");
 
             this.drink = instructions[0].charAt(0);
 
-            if (instructions.length > 2) {
+            if (!isMessage()) {
                 try {
                     this.sugarQuantity = Integer.valueOf(instructions[1]);
-                } catch (NumberFormatException ex) {
+                } catch (Exception ex) {
                     this.sugarQuantity = null;
                 }
 
                 try {
                     this.stickOrNot = Integer.valueOf(instructions[2]);
-                } catch (NumberFormatException ex) {
+                } catch (Exception ex) {
                     this.stickOrNot = null;
                 }
             }
             else {
                 this.message = instructions[1];
             }
-        } catch (Exception ex) {
+        }
+        else {
             throw new WrongOrderException("Wrong order !");
         }
     }
@@ -45,6 +48,10 @@ public class DrinkMakerOrder {
 
     public Integer getSugarQuantity() {
         return sugarQuantity;
+    }
+
+    private Integer showSugarQuantity() {
+        return sugarQuantity == null ? 0 : sugarQuantity;
     }
 
     public void setSugarQuantity(Integer sugarQuantity) {
@@ -77,7 +84,7 @@ public class DrinkMakerOrder {
         else {
             return "DrinkMakerOrder {" + "\n\t" +
                     "drink: " + getDrinkName() + ",\n\t" +
-                    "sugarQuantity: " + sugarQuantity + ",\n\t" +
+                    "sugarQuantity: " + showSugarQuantity() + ",\n\t" +
                     "stickOrNot: " + isStick() + "\n" +
                     '}';
         }
