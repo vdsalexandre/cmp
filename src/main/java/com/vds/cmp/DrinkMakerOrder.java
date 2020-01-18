@@ -66,4 +66,40 @@ public class DrinkMakerOrder {
     public void setMessage(String message) {
         this.message = message;
     }
+
+    @Override
+    public String toString() {
+        if (isMessage()) {
+            return "DrinkMakerOrder {" + "\n\t" +
+                    "message: " + message + "\n" +
+                    '}';
+        }
+        else {
+            return "DrinkMakerOrder {" + "\n\t" +
+                    "drink: " + getDrinkName() + ",\n\t" +
+                    "sugarQuantity: " + sugarQuantity + ",\n\t" +
+                    "stickOrNot: " + isStick() + "\n" +
+                    '}';
+        }
+    }
+
+    private String getDrinkName() {
+        String drinkName = "";
+
+        if (this.drink == 'T') drinkName = "tea";
+
+        if (this.drink == 'H') drinkName = "chocolate";
+
+        if (this.drink == 'C') drinkName = "coffee";
+
+        return drinkName;
+    }
+
+    private Boolean isMessage() {
+        return this.drink == 'M';
+    }
+
+    private String isStick() {
+        return this.stickOrNot != null ? "Yes" : "No";
+    }
 }
