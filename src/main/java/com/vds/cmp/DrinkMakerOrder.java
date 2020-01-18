@@ -3,12 +3,13 @@ package com.vds.cmp;
 import com.vds.error.WrongOrderException;
 
 public class DrinkMakerOrder {
-    private Character drink;
+    private Character code;
     private Integer sugarQuantity;
     private Integer stickOrNot;
     private String message;
     private double orderPrice;
     private boolean orderOkay;
+    private double moneyToBack;
 
     public DrinkMakerOrder(String commandOrder) throws WrongOrderException {
         if (isCommandOrderOkay(commandOrder)) {
@@ -16,7 +17,7 @@ public class DrinkMakerOrder {
 
             if (instructions.length > 4 || instructions.length < 1) throw new WrongOrderException("Wrong order");
 
-            this.drink = instructions[0].charAt(0);
+            this.code = instructions[0].charAt(0);
 
             if (!isMessage()) {
                 try {
@@ -35,7 +36,9 @@ public class DrinkMakerOrder {
 
                 if (instructions.length == 4) {
                     try {
-                        orderOkay = calculateOrderOkay(Double.valueOf(instructions[3]));
+                        double orderMoney = Double.valueOf(instructions[3]);
+                        orderOkay = calculateOrderOkay(orderMoney);
+                        moneyToBack = orderMoney - orderPrice;
                     } catch (Exception ex) {
                         orderOkay = false;
                     }
@@ -50,12 +53,12 @@ public class DrinkMakerOrder {
         }
     }
 
-    public Character getDrink() {
-        return drink;
+    public Character getCode() {
+        return code;
     }
 
-    public void setDrink(Character drink) {
-        this.drink = drink;
+    public void setCode(Character code) {
+        this.code = code;
     }
 
     public Integer getSugarQuantity() {
@@ -94,16 +97,16 @@ public class DrinkMakerOrder {
     public String toString() {
         if (isMessage()) {
             return "DrinkMakerOrder {" + "\n\t" +
-                    "message: " + message + "\n" +
+                    "message= " + message + "\n" +
                     '}';
         }
         else {
             return "DrinkMakerOrder {" + "\n\t" +
-                    "drink: " + getDrinkName() + ",\n\t" +
-                    "sugarQuantity: " + showSugarQuantity() + ",\n\t" +
-                    "stickOrNot: " + isStick() + ",\n\t" +
-                    "orderPrice: " + orderPrice + "€,\n\t" +
-                    "isOrderOkay: " + orderOkay + "\n" +
+                    "drink= " + getDrinkName() + ",\n\t" +
+                    "sugarQuantity= " + showSugarQuantity() + ",\n\t" +
+                    "stickOrNot= " + isStick() + ",\n\t" +
+                    "orderPrice= " + orderPrice + "€,\n\t" +
+                    "isOrderOkay= " + orderOkay + "\n" +
                     '}';
         }
     }
@@ -111,17 +114,17 @@ public class DrinkMakerOrder {
     private String getDrinkName() {
         String drinkName = "";
 
-        if (this.drink == 'T') drinkName = "tea";
+        if (this.code == 'T') drinkName = "tea";
 
-        if (this.drink == 'H') drinkName = "chocolate";
+        if (this.code == 'H') drinkName = "chocolate";
 
-        if (this.drink == 'C') drinkName = "coffee";
+        if (this.code == 'C') drinkName = "coffee";
 
         return drinkName;
     }
 
     private boolean isMessage() {
-        return this.drink == 'M';
+        return this.code == 'M';
     }
 
     private String isStick() {
@@ -144,5 +147,9 @@ public class DrinkMakerOrder {
 
     private boolean calculateOrderOkay(double money) {
         return money >= orderPrice;
+    }
+
+    public String createNewMessage() {
+        return !orderOkay ? "M:Solde insuffisant" : "M:Paiement ok, rendu= " + moneyToBack + "€";
     }
 }

@@ -10,7 +10,7 @@ public class DrinkMakerOrderTest {
     @Test
     void createNewOrder() throws WrongOrderException {
         DrinkMakerOrder order = new DrinkMakerOrder("T:1:0");
-        Assertions.assertEquals('T', order.getDrink());
+        Assertions.assertEquals('T', order.getCode());
         Assertions.assertEquals(1, order.getSugarQuantity());
         Assertions.assertEquals(0, order.getStickOrNot());
     }
@@ -18,7 +18,7 @@ public class DrinkMakerOrderTest {
     @Test
     void createNewOrderNoSugar() throws WrongOrderException {
         DrinkMakerOrder order = new DrinkMakerOrder("H::0");
-        Assertions.assertEquals('H', order.getDrink());
+        Assertions.assertEquals('H', order.getCode());
         Assertions.assertEquals(null, order.getSugarQuantity());
         Assertions.assertEquals(0, order.getStickOrNot());
     }
@@ -40,7 +40,7 @@ public class DrinkMakerOrderTest {
     @Test()
     void createNewOrderNoStick() throws WrongOrderException {
         DrinkMakerOrder order = new DrinkMakerOrder("C:2:");
-        Assertions.assertEquals('C', order.getDrink());
+        Assertions.assertEquals('C', order.getCode());
         Assertions.assertEquals(2, order.getSugarQuantity());
         Assertions.assertEquals(null, order.getStickOrNot());
     }
@@ -48,7 +48,7 @@ public class DrinkMakerOrderTest {
     @Test()
     void createNewMessage() throws WrongOrderException {
         DrinkMakerOrder order = new DrinkMakerOrder("M:il faudrait acheter a nouveau du café, il y en a plus ...");
-        Assertions.assertEquals('M', order.getDrink());
+        Assertions.assertEquals('M', order.getCode());
         Assertions.assertEquals(order.getMessage(), order.getMessage());
     }
 
@@ -73,7 +73,7 @@ public class DrinkMakerOrderTest {
     @Test()
     void createNewOrderWithPaymentOk() throws WrongOrderException {
         DrinkMakerOrder order = new DrinkMakerOrder("C:::1");
-        Assertions.assertEquals('C', order.getDrink());
+        Assertions.assertEquals('C', order.getCode());
         Assertions.assertEquals(null, order.getSugarQuantity());
         Assertions.assertEquals(null, order.getStickOrNot());
         Assertions.assertEquals(true, order.isOrderOkay());
@@ -82,9 +82,42 @@ public class DrinkMakerOrderTest {
     @Test()
     void createNewOrderWithPaymentKo() throws WrongOrderException {
         DrinkMakerOrder order = new DrinkMakerOrder("H:1:0:0.2");
-        Assertions.assertEquals('H', order.getDrink());
+        Assertions.assertEquals('H', order.getCode());
         Assertions.assertEquals(1, order.getSugarQuantity());
         Assertions.assertEquals(0, order.getStickOrNot());
         Assertions.assertEquals(false, order.isOrderOkay());
+    }
+
+    @Test()
+    void createNewOrderAndSendMessage() throws WrongOrderException {
+        DrinkMakerOrder order = new DrinkMakerOrder("C::0:1");
+        Assertions.assertEquals('C', order.getCode());
+        Assertions.assertEquals(null, order.getSugarQuantity());
+        Assertions.assertEquals(0, order.getStickOrNot());
+        Assertions.assertEquals(true, order.isOrderOkay());
+
+        DrinkMakerOrder orderMessage = new DrinkMakerOrder(order.createNewMessage());
+        Assertions.assertEquals('M', orderMessage.getCode());
+        System.out.println(orderMessage);
+
+        DrinkMakerOrder order1 = new DrinkMakerOrder("T:2::2");
+        Assertions.assertEquals('T', order1.getCode());
+        Assertions.assertEquals(2, order1.getSugarQuantity());
+        Assertions.assertEquals(null, order1.getStickOrNot());
+        Assertions.assertEquals(true, order1.isOrderOkay());
+
+        DrinkMakerOrder orderMessage1 = new DrinkMakerOrder(order1.createNewMessage());
+        Assertions.assertEquals('M', orderMessage.getCode());
+        System.out.println(orderMessage1);
+
+        DrinkMakerOrder order2 = new DrinkMakerOrder("C:::0.5");
+        Assertions.assertEquals('C', order2.getCode());
+        Assertions.assertEquals(null, order2.getSugarQuantity());
+        Assertions.assertEquals(null, order2.getStickOrNot());
+        Assertions.assertEquals(false, order2.isOrderOkay());
+
+        DrinkMakerOrder orderMessage2 = new DrinkMakerOrder(order2.createNewMessage());
+        Assertions.assertEquals('M', orderMessage2.getCode());
+        System.out.println(orderMessage2);
     }
 }
