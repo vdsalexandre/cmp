@@ -9,31 +9,29 @@ public class DrinkMakerOrder {
     private String message;
 
     public DrinkMakerOrder(String commandOrder) throws WrongOrderException {
-        if (commandOrder.contains(":")) {
+        try {
             String[] instructions = commandOrder.split(":");
-
-            if (instructions.length > 3 || instructions.length < 1) throw new WrongOrderException("Wrong order");
 
             this.drink = instructions[0].charAt(0);
 
-            if (!isMessage()) {
+            if (instructions.length > 2) {
                 try {
                     this.sugarQuantity = Integer.valueOf(instructions[1]);
-                } catch (Exception ex) {
+                } catch (NumberFormatException ex) {
                     this.sugarQuantity = null;
                 }
 
                 try {
                     this.stickOrNot = Integer.valueOf(instructions[2]);
-                } catch (Exception ex) {
+                } catch (NumberFormatException ex) {
                     this.stickOrNot = null;
                 }
             }
             else {
                 this.message = instructions[1];
             }
-        } else {
-            throw new WrongOrderException("Wrong order");
+        } catch (Exception ex) {
+            throw new WrongOrderException("Wrong order !");
         }
     }
 
@@ -47,10 +45,6 @@ public class DrinkMakerOrder {
 
     public Integer getSugarQuantity() {
         return sugarQuantity;
-    }
-
-    private Integer showSugarQuantity() {
-        return sugarQuantity == null ? 0 : sugarQuantity;
     }
 
     public void setSugarQuantity(Integer sugarQuantity) {
@@ -71,41 +65,5 @@ public class DrinkMakerOrder {
 
     public void setMessage(String message) {
         this.message = message;
-    }
-
-    @Override
-    public String toString() {
-        if (isMessage()) {
-            return "DrinkMakerOrder {" + "\n\t" +
-                    "message: " + message + "\n" +
-                    '}';
-        }
-        else {
-            return "DrinkMakerOrder {" + "\n\t" +
-                    "drink: " + getDrinkName() + ",\n\t" +
-                    "sugarQuantity: " + showSugarQuantity() + ",\n\t" +
-                    "stickOrNot: " + isStick() + "\n" +
-                    '}';
-        }
-    }
-
-    private String getDrinkName() {
-        String drinkName = "";
-
-        if (this.drink == 'T') drinkName = "tea";
-
-        if (this.drink == 'H') drinkName = "chocolate";
-
-        if (this.drink == 'C') drinkName = "coffee";
-
-        return drinkName;
-    }
-
-    private Boolean isMessage() {
-        return this.drink == 'M';
-    }
-
-    private String isStick() {
-        return this.stickOrNot != null ? "Yes" : "No";
     }
 }
