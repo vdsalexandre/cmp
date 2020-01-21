@@ -4,6 +4,8 @@ import com.vds.error.WrongOrderException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
+
 
 public class DrinkMakerOrderTest {
 
@@ -142,5 +144,33 @@ public class DrinkMakerOrderTest {
         Assertions.assertEquals(null, order.getSugarQuantity());
         Assertions.assertEquals(null, order.getStickOrNot());
         Assertions.assertEquals(true, order.isOrderOkay());
+    }
+
+    @Test()
+    void createOrdersAndShowThem() throws WrongOrderException {
+        CMPRepository dataRepository = new CMPRepository();
+
+        DrinkMakerOrder order1 = new DrinkMakerOrder("Th:2:0:2");
+        dataRepository.addNewDrinkMakerOrder(order1);
+
+        DrinkMakerOrder order2 = new DrinkMakerOrder("C:::1");
+        dataRepository.addNewDrinkMakerOrder(order2);
+
+        DrinkMakerOrder order3 = new DrinkMakerOrder("Ch:1:0:2");
+        dataRepository.addNewDrinkMakerOrder(order3);
+
+        DrinkMakerOrder order4 = new DrinkMakerOrder("O:::5");
+        dataRepository.addNewDrinkMakerOrder(order4);
+
+        DrinkMakerOrder order5 = new DrinkMakerOrder("Hh::0:2");
+        dataRepository.addNewDrinkMakerOrder(order5);
+
+        double total = dataRepository.getTotalPriceFromAllCommands();
+        Assertions.assertEquals(2.7, total);
+
+        double totalCoffee = dataRepository.getTotalPriceFromCommandsWith('C');
+        Assertions.assertEquals(1.2, totalCoffee);
+
+        System.out.println(dataRepository.printReport());
     }
 }

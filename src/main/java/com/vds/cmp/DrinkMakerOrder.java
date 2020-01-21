@@ -120,7 +120,7 @@ public class DrinkMakerOrder {
         }
     }
 
-    private String getDrinkName() {
+    public String getDrinkName() {
         for (Drinks drink : Drinks.values()) {
             if (this.code == drink.getCode())
                 return drink.getName();
