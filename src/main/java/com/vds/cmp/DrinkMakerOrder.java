@@ -10,6 +10,7 @@ public class DrinkMakerOrder {
     private double orderPrice;
     private boolean orderOkay;
     private double moneyToBack;
+    private boolean extraHot;
 
     public DrinkMakerOrder(String commandOrder) throws WrongOrderException {
         if (isCommandOrderOkay(commandOrder)) {
@@ -17,7 +18,14 @@ public class DrinkMakerOrder {
 
             if (instructions.length > 4 || instructions.length < 1) throw new WrongOrderException("Wrong order");
 
-            this.code = instructions[0].charAt(0);
+            String commandCode = instructions[0];
+
+            if (commandCode.length() == 2 && commandCode.endsWith("h"))
+                this.extraHot = true;
+            else
+                this.extraHot = false;
+
+            this.code = commandCode.charAt(0);
 
             if (!isMessage()) {
                 try {
@@ -103,6 +111,7 @@ public class DrinkMakerOrder {
         else {
             return "DrinkMakerOrder {" + "\n\t" +
                     "drink= " + getDrinkName() + ",\n\t" +
+                    "extra hot= " + extraHot + ",\n\t" +
                     "sugarQuantity= " + showSugarQuantity() + ",\n\t" +
                     "stickOrNot= " + isStick() + ",\n\t" +
                     "orderPrice= " + orderPrice + "€,\n\t" +
@@ -112,15 +121,12 @@ public class DrinkMakerOrder {
     }
 
     private String getDrinkName() {
-        String drinkName = "";
+        for (Drinks drink : Drinks.values()) {
+            if (this.code == drink.getCode())
+                return drink.getName();
+        }
 
-        if (this.code == 'T') drinkName = Drinks.TEA.getName();
-
-        if (this.code == 'H') drinkName = Drinks.CHOCOLATE.getName();
-
-        if (this.code == 'C') drinkName = Drinks.COFFEE.getName();
-
-        return drinkName;
+        return "";
     }
 
     private boolean isMessage() {
@@ -132,11 +138,10 @@ public class DrinkMakerOrder {
     }
 
     public double getOrderPrice() {
-        if (Drinks.CHOCOLATE.getName().equals(getDrinkName())) return Drinks.CHOCOLATE.getPrice();
-
-        if (Drinks.COFFEE.getName().equals(getDrinkName())) return Drinks.COFFEE.getPrice();
-
-        if (Drinks.TEA.getName().equals(getDrinkName())) return Drinks.TEA.getPrice();
+        for (Drinks drink : Drinks.values()) {
+            if (this.code == drink.getCode())
+                return drink.getPrice();
+        }
 
         return 0.0;
     }
@@ -151,5 +156,9 @@ public class DrinkMakerOrder {
 
     public String createNewMessage() {
         return !orderOkay ? "M:Solde insuffisant" : "M:Paiement ok, rendu= " + moneyToBack + "€";
+    }
+
+    public boolean isExtraHot() {
+        return extraHot;
     }
 }

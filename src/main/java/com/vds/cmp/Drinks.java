@@ -1,14 +1,17 @@
 package com.vds.cmp;
 
 public enum Drinks {
-    TEA("tea", 0.4),
-    COFFEE("coffee", 0.6),
-    CHOCOLATE("chocolate", 0.5);
+    TEA('T', "tea", 0.4),
+    COFFEE('C', "coffee", 0.6),
+    CHOCOLATE('H', "chocolate", 0.5),
+    ORANGE_JUICE('O', "orange juice", 0.6);
 
+    private char code;
     private String name;
     private double price;
 
-    Drinks(String name, double price) {
+    Drinks(char code, String name, double price) {
+        this.code = code;
         this.name = name;
         this.price = price;
     }
@@ -19,5 +22,9 @@ public enum Drinks {
 
     public double getPrice() {
         return price;
+    }
+
+    public char getCode() {
+        return code;
     }
 }

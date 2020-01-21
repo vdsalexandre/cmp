@@ -120,4 +120,27 @@ public class DrinkMakerOrderTest {
         Assertions.assertEquals('M', orderMessage2.getCode());
         System.out.println(orderMessage2);
     }
+
+    @Test()
+    void createNewOrderExtraHot() throws WrongOrderException {
+        DrinkMakerOrder order = new DrinkMakerOrder("Ch:::1");
+        Assertions.assertEquals('C', order.getCode());
+        Assertions.assertEquals(true, order.isExtraHot());
+        Assertions.assertEquals(null, order.getSugarQuantity());
+        Assertions.assertEquals(null, order.getStickOrNot());
+        Assertions.assertEquals(true, order.isOrderOkay());
+
+        DrinkMakerOrder orderMessage = new DrinkMakerOrder(order.createNewMessage());
+        Assertions.assertEquals('M', orderMessage.getCode());
+    }
+
+    @Test()
+    void createNewOrderWithNewDrink() throws WrongOrderException {
+        DrinkMakerOrder order = new DrinkMakerOrder("O:::2");
+        Assertions.assertEquals('O', order.getCode());
+        Assertions.assertEquals(false, order.isExtraHot());
+        Assertions.assertEquals(null, order.getSugarQuantity());
+        Assertions.assertEquals(null, order.getStickOrNot());
+        Assertions.assertEquals(true, order.isOrderOkay());
+    }
 }
