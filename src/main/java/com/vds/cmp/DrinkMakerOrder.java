@@ -1,6 +1,8 @@
 package com.vds.cmp;
 
 import com.vds.error.WrongOrderException;
+import com.vds.services.BeverageQuantityCheckerImpl;
+import com.vds.services.EmailNotifierImpl;
 
 public class DrinkMakerOrder {
     private Character code;
@@ -11,6 +13,8 @@ public class DrinkMakerOrder {
     private boolean orderOkay;
     private double moneyToBack;
     private boolean extraHot;
+    private BeverageQuantityCheckerImpl quantityCheckerService;
+    private EmailNotifierImpl emailNotifierService;
 
     public DrinkMakerOrder(String commandOrder) throws WrongOrderException {
         if (isCommandOrderOkay(commandOrder)) {
@@ -19,12 +23,7 @@ public class DrinkMakerOrder {
             if (instructions.length > 4 || instructions.length < 1) throw new WrongOrderException("Wrong order");
 
             String commandCode = instructions[0];
-
-            if (commandCode.length() == 2 && commandCode.endsWith("h"))
-                this.extraHot = true;
-            else
-                this.extraHot = false;
-
+            this.extraHot = checkIfDrinkIsExtraHot(commandCode);
             this.code = commandCode.charAt(0);
 
             if (!isMessage()) {
@@ -65,10 +64,6 @@ public class DrinkMakerOrder {
         return code;
     }
 
-    public void setCode(Character code) {
-        this.code = code;
-    }
-
     public Integer getSugarQuantity() {
         return sugarQuantity;
     }
@@ -77,24 +72,12 @@ public class DrinkMakerOrder {
         return sugarQuantity == null ? 0 : sugarQuantity;
     }
 
-    public void setSugarQuantity(Integer sugarQuantity) {
-        this.sugarQuantity = sugarQuantity;
-    }
-
     public Integer getStickOrNot() {
         return stickOrNot;
     }
 
-    public void setStickOrNot(Integer stickOrNot) {
-        this.stickOrNot = stickOrNot;
-    }
-
     public String getMessage() {
         return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
     }
 
     public boolean isCommandOrderOkay(String commandOrder) {
@@ -129,6 +112,13 @@ public class DrinkMakerOrder {
         return "";
     }
 
+    public boolean checkIfDrinkIsExtraHot(String commandCode) {
+        if (commandCode.length() == 2 && commandCode.endsWith("h"))
+            return true;
+        else
+            return false;
+    }
+
     private boolean isMessage() {
         return this.code == 'M';
     }
@@ -160,5 +150,21 @@ public class DrinkMakerOrder {
 
     public boolean isExtraHot() {
         return extraHot;
+    }
+
+    public boolean isEnough(String drinkName) {
+        return quantityCheckerService.isEmpty(drinkName);
+    }
+
+    public void notifyMissingDrink(String drinkName) {
+        emailNotifierService.notifyMissingDrink(drinkName);
+    }
+
+    public void initializeBeverageQuantityCheckerService(BeverageQuantityCheckerImpl quantityCheckerService) {
+        this.quantityCheckerService = quantityCheckerService;
+    }
+
+    public void initializeEmailNotifierService(EmailNotifierImpl emailNotifierService) {
+        this.emailNotifierService = emailNotifierService;
     }
 }

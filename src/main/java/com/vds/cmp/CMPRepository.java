@@ -14,20 +14,6 @@ public class CMPRepository {
         allCommands.add(order);
     }
 
-    public List<DrinkMakerOrder> getAllCommandsWith(char code) {
-        List<DrinkMakerOrder> orders = new ArrayList<>();
-
-        for (DrinkMakerOrder drinkOrder : allCommands) {
-            if (drinkOrder.getCode() == code)
-                orders.add(drinkOrder);
-        }
-        return orders;
-    }
-
-    public List<DrinkMakerOrder> getAllCommands() {
-        return allCommands;
-    }
-
     public double getTotalPriceFromAllCommands() {
         double total = 0;
 
